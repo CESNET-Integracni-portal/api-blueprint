@@ -1,0 +1,1139 @@
+FORMAT: 1A
+HOST: http://147.32.80.219:8080/integracni-portal/rest/v0.1/
+
+# CESNET Integrační portál
+
+This document describes the API for accessing and managing Integrační portál backend. Almost all 
+requests need some kind of authentication token (Basic authentication, Authorization) to 
+be able to access the backend.
+
+Each example request in this document has response that represents the proper successful processing
+of the request. If the request was not successful an appropriate response code will be returned.
+See the list below for most common server responses.
+
+## Typical Server Responses
+
+- 200 `OK` - The request was successful (some API calls may return 201 instead).
+- 201 `Created` - The request was successful and a resource was created.
+- 204 `No Content` - The request was successful but there is no representation to return (that is, the response is empty).
+- 400 `Bad Request` - The request could not be understood or was missing required parameters.
+- 401 `Unauthorized` - Authentication failed or user does not have permissions for the requested operation.
+- 403 `Forbidden` - Access denied.
+- 404 `Not Found` - Resource was not found.
+- 405 `Method Not Allowed` - Requested method is not supported for the specified resource.
+- 409 `Conflict` - 
+- 503 `Service Unavailable` - The service may be in bad state and could not process the request.
+
+
+# Group Users
+
+## /user
+### Retrieve all Users [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "username": "jan",
+                "unitId": 1,
+                "roles": [],
+                "permissions": {
+                    "externists": false,
+                    "main_admin": false,
+                    "password": false,
+                    "units": false
+                },
+                "directPermissions": []
+            }
+            {
+                "id": 2,
+                "username": "petr",
+                "unitId": 1,
+                "roles": [],
+                "permissions": {
+                    "externists": false,
+                    "main_admin": false,
+                    "password": false,
+                    "units": false
+                },
+                "directPermissions": []
+            }
+        ]
+
+### Create a User [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "username": "jan",
+                "password": "heslo",
+                "unitId": 1,
+                "roles": [],
+                "directPermissions": []
+            }
+            
++ Response 200 (application/json)
+
+    [User][]
+
+# Group User
+
+## User [/user/{id}]
+
++ Parameters
+    + id (required, integer, `1`) ... Unique User identifier.
+
++ Model
+
+        {
+            "id": 1,
+            "username": "jan",
+            "unitId": 1,
+            "roles": [],
+            "permissions": {
+                "externists": false,
+                "main_admin": false,
+                "password": false,
+                "units": false
+            },
+            "directPermissions": []
+        }
+
+### Retrieve a User [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "username": "jan",
+            "unitId": 1,
+            "roles": [],
+            "permissions": {
+                "externists": false,
+                "main_admin": false,
+                "password": false,
+                "units": false
+            },
+            "directPermissions": []
+        }
+
+## /user/{id}/passwordChange
+
++ Parameters
+    + id (required, integer, `1`) ... Unique User identifier.
+
+### Change User's password [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "password": "5sxh9e8"
+            }
+            
++ Response 204
+
+
+## /user/{id}/unitAssignment
+
++ Parameters
+    + id (required, integer, `1`) ... Unique User identifier.
+
+
+### Assign an Organization Unit to a User [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "unitId": 1
+            }
+            
++ Response 204
+
+
+## /user/{id}/rolesAssignment
+
++ Parameters
+    + id (required, integer, `1`) ... Unique User identifier.
+
+### Assign User Roles to a User [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "roles": ['admin']
+            }
+            
++ Response 204
+
+
+## /user/{id}/permissionsGrant
+
++ Parameters
+    + id (required, integer, `1`) ... Unique User identifier.
+
+### Grant permission to a User [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "permissions": ["password"]
+            }
+            
++ Response 204
+
+
+## Logged-in User [/user/current]
+    
+### Retrieve current logged-in User [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "username": "jan",
+            "roles": [],
+            "permissions": {
+                "externists": false,
+                "main_admin": false,
+                "password": false,
+                "units": false
+            },
+            "directPermissions": []
+        }
+
+
+
+# Group User Roles
+
+## User Roles Collection [/role]
+
+### Retrieve all User Roles [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "name": "change_password",
+                "description": "Can change his own password",
+                "permissions": [
+                    "password"
+                ]
+            },
+            {
+                "id": 2,
+                "name": "admin_externists",
+                "description": "Administrator of externists",
+                "permissions": [
+                    "externists"
+                ]
+            }
+        ]
+
+### Create a User Role [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "name": "change_password",
+                "description": "Can change his own password",
+                "permissions": [
+                    "password"
+                ]
+            }
+            
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "change_password",
+            "description": "Can change his own password",
+            "permissions": [
+                "password"
+            ]
+        }
+
+## User Role [/role/{id}]
+
++ Parameters
+    + id (required, integer, `1`) ... User Role identifier.
+    
+
+### Retrieve a User Role [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "change_password",
+            "description": "Can change his own password",
+            "permissions": [
+                "password"
+            ]
+        }
+
+### Update a User Role [PUT]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "name": "change_password",
+                "description": "Can change his own password",
+                "permissions": [
+                    "password"
+                ]
+            }
+            
++ Response 204
+
+
+# Group User Permissions
+
+## User Permissions Collection [/permission]
+### Retrieve all User Permissions [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        [
+            "main_admin",
+            "units",
+            "externists",
+            "password"
+        ]
+
+
+
+# Group Organizational Units
+
+## Organizational Units Collection [/unit]
+
+### Retrieve all Organizational Units [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "name": "Katedra Počítačů",
+                "quota": 1000000000,
+                "admins": []
+            },
+            {
+                "id": 2,
+                "name": "Katedra Počítačové Grafiky a Interakce",
+                "quota": 1000000000,
+                "admins": []
+            }
+        ]
+
+
+# Group Organizational Unit
+
+## /unit/{id}
+
++ Parameters
+    + id (required, integer, `1`) ... Organizational Unit identifier.
+
+
+### Retrieve an Organizational Unit [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "Katedra Počítačů",
+            "quota": 1000000000,
+            "admins": []
+        }
+
+
+## /unit/{id}/nameChange
+
++ Parameters
+    + id (required, integer, `1`) ... Organizational Unit identifier.
+
+### Change name of an Organizational Unit [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "name": "Katedra počítačů"
+            }
+            
++ Response 204
+
+
+## /unit/{id}/quotaChange
+
++ Parameters
+    + id (required, integer, `1`) ... Organizational Unit identifier.
+
+### Change quota of an Organizational Unit [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "quota": 100000
+            }
+            
++ Response 204
+
+## /unit/{id}/adminsAssignment
+
++ Parameters
+    + id (required, integer, `1`) ... Organizational Unit identifier.
+
+### Assign administrators to an Organizational Unit [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+            
+            {
+                "admins": [1, 2]
+            }
+            
++ Response 204
+
+
+
+
+
+
+
+
+# Group Space
+
+## Spaces Collection [/space]
+
+### Retrieve all Spaces [GET]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        {
+            "spaces": [
+                {
+                    "id": "cesnet",
+                    "name": "CESNET"
+                },
+                {
+                    "id": "bacula",
+                    "name": "Bacula"
+                }
+            ]
+        }
+        
+## Shared [/space/{spaceId}/shared{?labels}]
+
+### Retrieve all shared files and folders in a Space [GET]
+
+List all the files and folders that are shared to the current user in a Space. Optionally use `labels` query parameter
+to list all the files and folders with the given label assigned.
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + labels (required, list of strings, `work,school`) ... Labels to filter by.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        {
+            "id": "f4b26f6f-9ec6-4acf-bbe1-6dc73fc7ebeb",
+            "name": "home",
+            "breadcrumbs": [],
+            "folders": [
+                {
+                    "id": "3cf4e5a2-35ca-449d-b683-5da284ab7cfe",
+                    "name": "prace",
+                    "createdOn": "2014-12-31T13:05+0100",
+                    "changedOn": "2014-12-31T13:09+0100"
+                }
+            ],
+            "files": [
+                {
+                    "uuid": "1ff076ae-7f8d-4d07-bb03-71aef2141f91",
+                    "filename": "todo.txt",
+                    "mimetype": "text/plain",
+                    "filesize": 86,
+                    "createdOn": "2014-12-31T13:09+0100",
+                    "changedOn": "2014-12-31T13:42+0100"
+                }
+            ],
+            "createdOn": "2014-12-31T13:01+0100",
+            "changedOn": "2014-12-31T13:05+0100"
+        }
+
+# Group Space Root
+
+## /space/{spaceId}{?labels}
+
+### Retrive all files and folders in a Space Root [GET]
+
+List all files and folders in root folder of a Space. Optionally use `labels` query parameter
+to list all the files and folders with the given label assigned.
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + labels (required, list of strings, `work,school`) ... Labels to filter by.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+        {
+            "id": "f4b26f6f-9ec6-4acf-bbe1-6dc73fc7ebeb",
+            "name": "home",
+            "breadcrumbs": [],
+            "folders": [
+                {
+                    "id": "3cf4e5a2-35ca-449d-b683-5da284ab7cfe",
+                    "name": "prace",
+                    "createdOn": "2014-12-31T13:05+0100",
+                    "changedOn": "2014-12-31T13:09+0100"
+                }
+            ],
+            "files": [
+                {
+                    "uuid": "1ff076ae-7f8d-4d07-bb03-71aef2141f91",
+                    "filename": "todo.txt",
+                    "mimetype": "text/plain",
+                    "filesize": 86,
+                    "createdOn": "2014-12-31T13:09+0100",
+                    "changedOn": "2014-12-31T13:42+0100"
+                }
+            ],
+            "createdOn": "2014-12-31T13:01+0100",
+            "changedOn": "2014-12-31T13:05+0100"
+        }
+        
+## /space/{spaceId}/folder
+### Create a Folder in a Space Root [POST]
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+
++ Request (application/json)
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+    
+    + Body
+    
+            {
+                "name": "Dokumenty"
+            }
+            
++ Response 200 (application/json)
+
+        {
+            "id": "3cf4e5a2-35ca-449d-b683-5da284ab7cfe",
+            "name": "Dokumenty",
+            "breadcrumbs": [],
+            "folders": [],
+            "files": [],
+            "createdOn": "2014-12-31T13:05+0100",
+            "changedOn": "2014-12-31T13:09+0100"
+        }
+
+        
+## /space/{spaceId}/file
+### Upload a file to Space Root [POST]
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+
++ Request (multipart/form-data)
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            ------WebKitFormBoundarysHuplScJzqTCcZuU
+            Content-Disposition: form-data; name="file"; filename="graf.jpg"
+            Content-Type: image/jpeg
+            
+            
+            ------WebKitFormBoundarysHuplScJzqTCcZuU--
+        
++ Response 204 (application/json)
+
+# Group Folder
+
+## Folder [/space/{spaceId}/folder/{folderId}]
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
++ Model
+
+        {
+            "id": "3cf4e5a2-35ca-449d-b683-5da284ab7cfe",
+            "name": "Dokumenty",
+            "breadcrumbs": [
+                { 
+                    "id": "de54e5a2-35ca-449d-b683-6aa284ab7c55", 
+                    "name": "Dokumenty"
+                }
+            ],
+            "folders": [
+                {
+                    "id": 4,
+                    "name": "Tabulky rychlostí",
+                    "owner": {
+                        "id": 1,
+                        "username": "jan"
+                    },
+                    "createdOn": "2014-11-08T14:23+0100",
+                    "changedOn": "2014-11-08T14:23+0100"
+                }
+            ],
+            "files": [
+                {
+                    "uuid": "1ff076ae-7f8d-4d07-bb03-71aef2141f91",
+                    "filename": "todo.txt",
+                    "mimetype": "text/plain",
+                    "filesize": 86,
+                    "createdOn": "2014-12-31T13:09+0100",
+                    "changedOn": "2014-12-31T13:42+0100"
+                }
+            ],
+            "createdOn": "2014-12-31T13:05+0100",
+            "changedOn": "2014-12-31T13:09+0100"
+        }
+
+### Retrieve a Folder metadata [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+    [Folder][]
+
+## /space/{spaceId}/folder/{folderId}/folder
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Parent folder identifier.
+
+### Create a child Folder [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            { "name": "Tabulky - staré" }
+            
++ Response 204
+
+## /space/{spaceId}/folder/{folderId}/file
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Parent folder identifier.
+
+### Upload a file to a Folder [POST]
+
++ Request (multipart/form-data)
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            ------WebKitFormBoundarysHuplScJzqTCcZuU
+            Content-Disposition: form-data; name="file"; filename="graf.jpg"
+            Content-Type: image/jpeg
+            
+            
+            ------WebKitFormBoundarysHuplScJzqTCcZuU--
+            
++ Response 201
+
+    [File][]
+
+## /space/{spaceId}/folder/{folderId}/nameChange
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Change the name of a Folder [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            { "name": "Tabulky - staré" }
+            
++ Response 204
+
+## /space/{spaceId}/folder/{folderId}/parentChange
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Move a Folder to a different Folder [POST]
+
+To move a Folder to a Space Root, the field `parent` in JSON body must be empty string.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            { "parent": "de54e5a2-35ca-449d-b683-6aa284ab7c55" }
+            
++ Response 204
+
+
+
+## /space/{spaceId}/folder/{folderId}/trash
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Put Folder to bin [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+            
++ Response 204
+
+## /space/{spaceId}/folder/{folderId}/online
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Make Folder online [POST]
+
+Change the state of the folder (and all child files and folders) in CESNET storage to online.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 204
+
+## /space/{spaceId}/folder/{folderId}/offline
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Make Folder offline [POST]
+
+Change the state of the folder (and all child files and folders) in CESNET storage to offline.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 204
+
+## /space/{spaceId}/folder/{folderId}/labelsAssignment
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Assign labels to a Folder [POST]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+    
+            { "labels": ['work', 'school'] }
+
+            
++ Response 204
+
+## /space/{spaceId}/folder/{folderId}/share
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Share a Folder with Users [POST]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+    
+            { "shareWith": [1, 2, 5] }
+
+            
++ Response 204
+
+
+
+# Group File
+
+## File [/space/{spaceId}/file/{fileId}]
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space Identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
++ Model
+
+        {
+            "id": "3cf4e5a2-35ca-449d-b683-5da284ab7cfe",
+            "name": "Dokumenty",
+            "breadcrumbs": [
+                { 
+                    "id": "de54e5a2-35ca-449d-b683-6aa284ab7c55", 
+                    "name": "Dokumenty"
+                }
+            ],
+            "folders": [
+                {
+                    "id": 4,
+                    "name": "Tabulky rychlostí",
+                    "owner": {
+                        "id": 1,
+                        "username": "jan"
+                    },
+                    "createdOn": "2014-11-08T14:23+0100",
+                    "changedOn": "2014-11-08T14:23+0100"
+                }
+            ],
+            "files": [
+                {
+                    "uuid": "1ff076ae-7f8d-4d07-bb03-71aef2141f91",
+                    "filename": "todo.txt",
+                    "mimetype": "text/plain",
+                    "filesize": 86,
+                    "createdOn": "2014-12-31T13:09+0100",
+                    "changedOn": "2014-12-31T13:42+0100"
+                }
+            ],
+            "createdOn": "2014-12-31T13:05+0100",
+            "changedOn": "2014-12-31T13:09+0100"
+        }
+
+### Retrieve a File metadata [GET]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200 (application/json)
+
+    [File][]
+
+## /space/{spaceId}/file/{fileId}/nameChange
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Change the name of a File [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            { "name": "My Foo File" }
+            
++ Response 204
+
+## /space/{spaceId}/file/{fileId}/parentChange
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Move a File to a different Folder [POST]
+
+To move a file to a Space Root, the field `parent` in JSON body must be empty string.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            { "parent": "de54e5a2-35ca-449d-b683-6aa284ab7c55" }
+            
++ Response 204
+
+
+
+## /space/{spaceId}/file/{fileId}/trash
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Put File to bin [POST]
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+            
++ Response 204
+
+## /space/{spaceId}/file/{fileId}/online
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Make File online [POST]
+
+Change the state of the file in CESNET storage to online.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 204
+
+## /space/{spaceId}/file/{fileId}/offline
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Make File offline [POST]
+
+Change the state of the file in CESNET storage to offline.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 204
+
+## /space/{spaceId}/file/{fileId}/labelsAssignment
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Assign labels to a File [POST]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+    
+            { "labels": ['work', 'school'] }
+
+            
++ Response 204
+
+## /space/{spaceId}/file/{fileId}/share
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Share a File with Users [POST]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+    
+            { "shareWith": [1, 2, 5] }
+
+            
++ Response 204
+
+## File contents [/space/{spaceId}/folder/{fileId}/content]
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+    
+
+### Retrieve the file contents [GET]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+            
++ Response 200
+
+### Upload file contents [PUT]
+
++ Request (multipart/form-data)
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+
+    + Body
+    
+            ------WebKitFormBoundarysHuplScJzqTCcZuU
+            Content-Disposition: form-data; name="file"; filename="graf.jpg"
+            Content-Type: image/jpeg
+            
+            
+            ------WebKitFormBoundarysHuplScJzqTCcZuU--
+        
++ Response 204
+
+
+
