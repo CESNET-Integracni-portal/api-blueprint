@@ -486,9 +486,94 @@ See the list below for most common server responses.
 
 
 
+# Group Labels
+
+## Labels Collection [/label]
+
+### Retrive all Labels [GET]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 200
+
+    + Body
+
+            [
+                {
+                    id: 1,
+                    text: "work",
+                    color: "#ff0000"
+                },
+                {
+                    id: 2,
+                    text: "school",
+                    color: "#00ff00"
+                }
+            ]
+
+### Create a new Label [POST]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+
+            {
+                text: "work",
+                color: "#ff0000"
+            }
+            
++ Response 200
+
+    + Body
+
+            {
+                id: 1,
+                text: "work",
+                color: "#ff0000"
+            }
 
 
+# Group Label
 
+## /label/{id}
+
++ Parameters
+    + id (required, integer, `1`) ... Label identifier.
+
+### Update Label [PUT]
+
++ Request
+    
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+
+            {
+                text: "work",
+                color: "#FF0000"
+            }
+            
++ Response 204
+
+### Delete Label [DELETE]
+
++ Request
+    
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 204
 
 
 # Group Space
@@ -803,7 +888,7 @@ To move a Folder to a Space Root, the field `parent` in JSON body must be empty 
 
     + Body
     
-            { "parent": "de54e5a2-35ca-449d-b683-6aa284ab7c55" }
+            { "parentId": "de54e5a2-35ca-449d-b683-6aa284ab7c55" }
             
 + Response 204
 
@@ -861,13 +946,13 @@ Change the state of the folder (and all child files and folders) in CESNET stora
             
 + Response 204
 
-## /space/{spaceId}/folder/{folderId}/labelsAssignment
+## /space/{spaceId}/folder/{folderId}/addLabel
 
 + Parameters
     + spaceId (required, string, `cesnet`) ... Space identifier.
     + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
 
-### Assign labels to a Folder [POST]
+### Add label to a Folder [POST]
 
 + Request
 
@@ -877,10 +962,71 @@ Change the state of the folder (and all child files and folders) in CESNET stora
             
     + Body
     
-            { "labels": ['work', 'school'] }
+            { "id": 1 }
 
             
 + Response 204
+
+## /space/{spaceId}/folder/{folderId}/removeLabel
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Remove label of a Folder [POST]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+    
+            { "id": 1 }
+
+            
++ Response 204
+
+
+## /space/{spaceId}/folder/{folderId}/favorite
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Move a Folder to a different Folder [POST]
+
+Pin a Folder to Favorite list.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 204
+
+
+## /space/{spaceId}/folder/{folderId}/unfavorite
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + folderId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... Folder identifier.
+
+### Move a Folder to a different Folder [POST]
+
+Unpin a Folder from Favorite list.
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
++ Response 204
+
+
 
 ## /space/{spaceId}/folder/{folderId}/share
 
@@ -1056,13 +1202,13 @@ Change the state of the file in CESNET storage to offline.
             
 + Response 204
 
-## /space/{spaceId}/file/{fileId}/labelsAssignment
+## /space/{spaceId}/file/{fileId}/addLabel
 
 + Parameters
     + spaceId (required, string, `cesnet`) ... Space identifier.
     + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
 
-### Assign labels to a File [POST]
+### Add label to a File [POST]
 
 + Request
 
@@ -1072,9 +1218,29 @@ Change the state of the file in CESNET storage to offline.
             
     + Body
     
-            { "labels": ['work', 'school'] }
-
+            { "id": 1 }
             
++ Response 204
+
+
+## /space/{spaceId}/file/{fileId}/removeLabel
+
++ Parameters
+    + spaceId (required, string, `cesnet`) ... Space identifier.
+    + fileId (required, string, `3cf4e5a2-35ca-449d-b683-5da284ab7cfe`) ... File identifier.
+
+### Remove label of a File [POST]
+
++ Request
+
+    + Header
+
+            Authorization: Bearer 6c9f44ac-a4d6-406c-a47e-38325a2736a9
+            
+    + Body
+    
+            { "id": 1 }
+
 + Response 204
 
 ## /space/{spaceId}/file/{fileId}/share
