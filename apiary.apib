@@ -741,13 +741,15 @@ to list all the files and folders with the given label assigned.
     + Body
     
             ------WebKitFormBoundarysHuplScJzqTCcZuU
-            Content-Disposition: form-data; name="file"; filename="graf.jpg"
+            Content-Disposition: form-data; name="file"; filename="todo.txt"
             Content-Type: image/jpeg
             
             
             ------WebKitFormBoundarysHuplScJzqTCcZuU--
         
-+ Response 204 (application/json)
++ Response 201 (application/json)
+
+    [File][]
 
 # Group Folder
 
@@ -820,9 +822,25 @@ to list all the files and folders with the given label assigned.
 
     + Body
     
-            { "name": "Tabulky - staré" }
+            { "name": "Tubulky" }
             
-+ Response 204
+            
++ Response 201 (application/json)
+
+        {
+            "id": "3cf4e5a2-35ca-449d-b683-5da284ab7cfe",
+            "name": "Tubulky",
+            "breadcrumbs": [
+                { 
+                    "id": "de54e5a2-35ca-449d-b683-6aa284ab7c55", 
+                    "name": "Dokumenty"
+                }
+            ],
+            "folders": [],
+            "files": [],
+            "createdOn": "2014-12-31T13:05+0100",
+            "changedOn": "2014-12-31T13:09+0100"
+        }
 
 ## /space/{spaceId}/folder/{folderId}/file
 
@@ -1062,38 +1080,12 @@ Unpin a Folder from Favorite list.
 + Model
 
         {
-            "id": "3cf4e5a2-35ca-449d-b683-5da284ab7cfe",
-            "name": "Dokumenty",
-            "breadcrumbs": [
-                { 
-                    "id": "de54e5a2-35ca-449d-b683-6aa284ab7c55", 
-                    "name": "Dokumenty"
-                }
-            ],
-            "folders": [
-                {
-                    "id": 4,
-                    "name": "Tabulky rychlostí",
-                    "owner": {
-                        "id": 1,
-                        "username": "jan"
-                    },
-                    "createdOn": "2014-11-08T14:23+0100",
-                    "changedOn": "2014-11-08T14:23+0100"
-                }
-            ],
-            "files": [
-                {
-                    "uuid": "1ff076ae-7f8d-4d07-bb03-71aef2141f91",
-                    "filename": "todo.txt",
-                    "mimetype": "text/plain",
-                    "filesize": 86,
-                    "createdOn": "2014-12-31T13:09+0100",
-                    "changedOn": "2014-12-31T13:42+0100"
-                }
-            ],
-            "createdOn": "2014-12-31T13:05+0100",
-            "changedOn": "2014-12-31T13:09+0100"
+            "uuid": "1ff076ae-7f8d-4d07-bb03-71aef2141f91",
+            "filename": "todo.txt",
+            "mimetype": "text/plain",
+            "filesize": 86,
+            "createdOn": "2014-12-31T13:09+0100",
+            "changedOn": "2014-12-31T13:42+0100"
         }
 
 ### Retrieve a File metadata [GET]
